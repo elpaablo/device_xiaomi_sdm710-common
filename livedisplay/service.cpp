@@ -19,17 +19,28 @@
 #include <android-base/logging.h>
 #include <binder/ProcessState.h>
 #include <hidl/HidlTransportSupport.h>
+#include <livedisplay/sdm/PictureAdjustment.h>
+
 #include "AntiFlicker.h"
 #include "SunlightEnhancement.h"
 
+using ::vendor::lineage::livedisplay::V2_0::sdm::PictureAdjustment;
+using ::vendor::lineage::livedisplay::V2_0::sdm::SDMController;
 using ::vendor::lineage::livedisplay::V2_1::implementation::AntiFlicker;
 using ::vendor::lineage::livedisplay::V2_1::implementation::SunlightEnhancement;
 
 int main() {
     android::sp<SunlightEnhancement> sunlightEnhancement = new SunlightEnhancement();
     android::sp<AntiFlicker> antiFlicker = new AntiFlicker();
+    std::shared_ptr<SDMController> controller = std::make_shared<SDMController>();
+    android::sp<PictureAdjustment> pictureAdjustment = new PictureAdjustment(controller);
 
     android::hardware::configureRpcThreadpool(1, true /*callerWillJoin*/);
+
+    if (pictureAdjustment->registerAsService() != android::OK) {
+        LOG(ERROR) << "Cannot register picture adjustment HAL service.";
+        return 1;
+    }
 
     if (antiFlicker->isSupported()) {
         if (antiFlicker->registerAsService() != android::OK) {
@@ -41,8 +52,8 @@ int main() {
     if (sunlightEnhancement->isSupported()) {
         if (sunlightEnhancement->registerAsService() != android::OK) {
             LOG(ERROR) << "Cannot register sunlight enhancement HAL service.";
-	    return 1;
-	}
+	          return 1;
+	      }
     }
 
     LOG(INFO) << "LiveDisplay HAL service is ready.";
