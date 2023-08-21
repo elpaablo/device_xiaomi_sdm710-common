@@ -42,19 +42,23 @@ int main() {
         return 1;
     }
 
+#ifdef SUPPORT_ANTI_FLICKER
     if (antiFlicker->isSupported()) {
         if (antiFlicker->registerAsService() != android::OK) {
             LOG(ERROR) << "Cannot register antiflicker HAL service.";
             return 1;
         }
     }
+#endif
 
+#ifdef SUPPORT_SUNLIGHT_ENHANCEMENT
     if (sunlightEnhancement->isSupported()) {
         if (sunlightEnhancement->registerAsService() != android::OK) {
             LOG(ERROR) << "Cannot register sunlight enhancement HAL service.";
 	          return 1;
 	      }
     }
+#endif
 
     LOG(INFO) << "LiveDisplay HAL service is ready.";
 

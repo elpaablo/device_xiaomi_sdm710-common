@@ -156,6 +156,14 @@ SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/public
 BOARD_VENDOR_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
 BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
 
+# Soong
+SOONG_CONFIG_NAMESPACES += sdm710Vars
+SOONG_CONFIG_sdm710Vars += \
+    livedisplay_support_anti_flicker \
+    livedisplay_support_sunlight_enhancement
+SOONG_CONFIG_sdm710Vars_livedisplay_support_anti_flicker ?= true
+SOONG_CONFIG_sdm710Vars_livedisplay_support_sunlight_enhancement ?= true
+
 # Verified Boot
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
