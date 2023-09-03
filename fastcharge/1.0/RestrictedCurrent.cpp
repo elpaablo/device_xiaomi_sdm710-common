@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2023 The LineageOS Project
+ * Copyright (C) 2023 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "fastcharge@1.0-service"
-#define FASTCHARGE_PATH "/sys/class/qcom-battery/restricted_charging"
-#define FASTCHARGE_DEFAULT_SETTING true
+#define LOG_TAG "fastcharge@1.0-service.qcom"
 
-#include "FastCharge.h"
+#define RESTRICTED_CURRENT_PATH "/sys/class/qcom-battery/restricted_current"
+
+#define MAX_SUPPORTED_CURRENT 3000 /*mA*/
+
+#include "RestrictedCurrent.h"
 #include <android-base/logging.h>
-
 #include <fstream>
 #include <iostream>
+#include <stdint.h>
 
 namespace vendor {
 namespace lineage {
@@ -73,23 +75,41 @@ static T get(const std::string& path, const T& def) {
     }
 }
 
-FastCharge::FastCharge() {}
+RestrictedCurrent::RestrictedCurrent() {}
 
-Return<bool> FastCharge::isEnabled() {
-    return get(FASTCHARGE_PATH, 0) < 1;
+/*
+ * Get the restricted current value from the corresponding sysnode
+ */
+Return<int32_t> RestrictedCurrent::getRestrictedCurrent() {
+    int current_uA = get(RESTRICTED_CURRENT_PATH, 0); /* current is stored in microampere */
+    int current_mA = current_uA / 1000; /* convert to miliampere */
+    return current_mA; /* always return mA */
 }
 
-Return<bool> FastCharge::setEnabled(bool enable) {
+/*
+ * Set the maximum allowed current (restricted current), when fast charging is disabled
+ */
+Return<bool> RestrictedCurrent::setRestrictedCurrent(int32_t current_mA) {
     bool success = false;
-    set(FASTCHARGE_PATH, enable ? 0 : 1);
-    if (enable == isEnabled()){
-        success = true;
+    if (current_mA > 0 && current_mA <= MAX_SUPPORTED_CURRENT) { /* validate */
+        int current_uA = current_mA * 1000; /* convert to microampere */
+        set(RESTRICTED_CURRENT_PATH, current_uA); /* store */
+        if (current_mA == getRestrictedCurrent()) { /* check */
+            success = true;
+        }
     }
     return success;
 }
 
-}  // namespace implementation
-}  // namespace V1_0
-}  // namespace fastcharge
-}  // namespace lineage
-}  // namespace vendor
+/*
+ * Get the maximum supported current
+ */
+Return<int32_t> RestrictedCurrent::getMaxSupportedCurrent() {
+    return MAX_SUPPORTED_CURRENT; /* always return mA */
+}
+
+} // namespace implementation
+} // namespace V1_0
+} // namespace fastcharge
+} // namespace lineage
+} // namespace vendor
