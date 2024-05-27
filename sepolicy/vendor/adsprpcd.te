@@ -1,2 +1,1 @@
-allow adsprpcd sysfs_graphics:dir search;
-allow adsprpcd sysfs_graphics:file { getattr open read };
+r_dir_file(adsprpcd, sysfs_graphics)

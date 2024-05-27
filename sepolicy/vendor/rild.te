@@ -1,3 +1,2 @@
-allow rild qtidataservices_app:binder call;
-
+# Allow rild to set IMEI props
 set_prop(rild, deviceid_prop)
