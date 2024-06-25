@@ -102,6 +102,7 @@ $(foreach p, $(call to-upper, $(ALL_PARTITIONS)), \
     $(eval TARGET_COPY_OUT_$(p) := $(call to-lower, $(p))))
 
 # Partitions - dynamic
+AB_OTA_UPDATER := false
 BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor cust
 BOARD_SUPER_PARTITION_METADATA_DEVICE := system
 BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 3758096384
