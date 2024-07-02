@@ -317,6 +317,7 @@ PRODUCT_PACKAGES += \
     libOmxQcelp13Enc \
     libOmxVdec \
     libOmxVenc \
+    libstagefright_softomx_plugin.vendor \
     libstagefrighthw
 
 # Overlays
