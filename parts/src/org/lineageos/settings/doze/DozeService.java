@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2015 The CyanogenMod Project
- *               2017-2018 The LineageOS Project
+ *               2017-2024 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,16 @@ public class DozeService extends Service {
     private static final String TAG = "DozeService";
     private static final boolean DEBUG = false;
 
-    private ProximitySensor mProximitySensor;
     private PickupSensor mPickupSensor;
+    private HandwaveSensor mHandwaveSensor;
+    private PocketSensor mPocketSensor;
 
     @Override
     public void onCreate() {
         if (DEBUG) Log.d(TAG, "Creating service");
-        mProximitySensor = new ProximitySensor(this);
         mPickupSensor = new PickupSensor(this);
+        mHandwaveSensor = new HandwaveSensor(this);
+        mPocketSensor = new PocketSensor(this);
 
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
@@ -55,8 +57,9 @@ public class DozeService extends Service {
         if (DEBUG) Log.d(TAG, "Destroying service");
         super.onDestroy();
         this.unregisterReceiver(mScreenStateReceiver);
-        mProximitySensor.disable();
         mPickupSensor.disable();
+        mHandwaveSensor.disable();
+        mPocketSensor.disable();
     }
 
     @Override
@@ -69,9 +72,11 @@ public class DozeService extends Service {
         if (DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.disable();
         }
-        if (DozeUtils.isHandwaveGestureEnabled(this) ||
-                DozeUtils.isPocketGestureEnabled(this)) {
-            mProximitySensor.disable();
+        if (DozeUtils.isHandwaveGestureEnabled(this)) {
+            mHandwaveSensor.disable();
+        }
+        if (DozeUtils.isPocketGestureEnabled(this)) {
+            mPocketSensor.disable();
         }
     }
 
@@ -80,9 +85,11 @@ public class DozeService extends Service {
         if (DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.enable();
         }
-        if (DozeUtils.isHandwaveGestureEnabled(this) ||
-                DozeUtils.isPocketGestureEnabled(this)) {
-            mProximitySensor.enable();
+        if (DozeUtils.isHandwaveGestureEnabled(this)) {
+            mHandwaveSensor.enable();
+        }
+        if (DozeUtils.isPocketGestureEnabled(this)) {
+            mPocketSensor.enable();
         }
     }
 
