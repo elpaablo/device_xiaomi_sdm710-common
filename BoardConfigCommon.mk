@@ -173,9 +173,7 @@ DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest.xml
 ifeq ($(TARGET_HAS_FM),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_fm.xml
 endif
-ifeq ($(TARGET_HAS_NFC),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_nfc.xml
-endif
 DEVICE_MATRIX_FILE += hardware/qcom-caf/common/compatibility_matrix.xml
 
 # VNDK

@@ -696,6 +696,17 @@ vendor/lib/vendor.qti.hardware.scve.panorama@1.0.so
 # SECCOMP policy
 vendor/etc/seccomp_policy/mediacodec.policy
 
+# Secure element - from grus
+vendor/bin/hw/vendor.qti.secure_element@1.0-service|48621dda1de283dcf0f5c93f0d17bcd53f3f2072
+-vendor/etc/init/vendor.qti.secure_element@1.0-service.rc|14796c45011ad0d4735e0f3c9dbc646e6af205aa
+vendor/lib64/hw/android.hardware.secure_element@1.0-impl.so|99bb218cf8491ac7e031dc389267454b4acbcfe6
+
+# Secure element (power manager)
+vendor/bin/hw/vendor.qti.esepowermanager@1.0-service
+-vendor/etc/init/vendor.qti.esepowermanager@1.0-service.rc
+vendor/lib64/hw/vendor.qti.esepowermanager@1.0-impl.so
+vendor/lib64/vendor.qti.esepowermanager@1.0.so
+
 # Soter
 -system/app/SoterService/SoterService.apk
 vendor/bin/hw/vendor.qti.hardware.soter@1.0-service
