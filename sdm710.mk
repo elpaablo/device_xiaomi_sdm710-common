@@ -154,7 +154,8 @@ PRODUCT_PACKAGES += \
 
 # DRM
 PRODUCT_PACKAGES += \
-    android.hardware.drm-service.clearkey
+    android.hardware.drm-service.clearkey \
+    libcrypto_shim.vendor
 
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4.vendor

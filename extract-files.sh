@@ -29,6 +29,9 @@ function blob_fixup() {
         vendor/etc/seccomp_policy/vendor.qti.hardware.dsp.policy)
             echo 'madvise: 1' >> ${2}
             ;;
+        vendor/lib64/libwvhidl.so)
+            grep -q "libcrypto_shim.so" "${2}" || "${PATCHELF}" --add-needed "libcrypto_shim.so" "${2}"
+            ;;
     esac
 }
 
